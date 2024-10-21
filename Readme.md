@@ -8,7 +8,7 @@ This repository provides a setup to deploy a Redis Cluster with 6 nodes (3 maste
 3. [Running Redis Cluster](#running-redis-cluster)
 4. [Connecting to Redis Cluster](#connecting-to-redis-cluster)
 5. [Managing Redis Cluster](#managing-redis-cluster)
-6. [Using RedisInsight](#using-redisinsight)
+6. [Using Redis Sentinel](#using-redis-sentinel)
 7. [Stopping and Removing the Cluster](#stopping-and-removing-the-cluster)
 
 ---
@@ -54,7 +54,6 @@ This will create 6 nodes with appropriate configuration files in `/redis/node-X/
 Below is the `docker-compose.yaml` file to set up the Redis Cluster:
 
 ```yaml
-version: "3"
 services:
   redis-1:
     image: redis
@@ -220,6 +219,72 @@ GET key
 ```bash
 CLUSTER INFO
 ```
+
+---
+
+## Using Redis Sentinel
+
+Redis Sentinel provides high availability for Redis. In this setup, we will add 3 Sentinels to monitor one master Redis instance. Each Sentinel instance will provide monitoring, notifications, and automatic failover.
+
+### Sentinel Configuration
+
+To configure Redis Sentinel, create a configuration file for each Sentinel instance with the following settings:
+
+```conf
+port 26379
+dir /data
+sentinel monitor mymaster1 172.38.0.11 6379 2
+sentinel down-after-milliseconds mymaster1 5000
+sentinel failover-timeout mymaster1 10000
+sentinel parallel-syncs mymaster1 1
+bind 0.0.0.0
+```
+
+### Running Sentinel Instances
+
+You can add Sentinel instances in your `docker-compose.yaml` like this:
+
+```yaml
+    sentinel-1:
+      image: redis
+      command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+      volumes:
+        - ./sentinel-1/conf:/etc/redis
+        - ./sentinel-1/data:/data
+      ports:
+        - 26379:26379
+      networks:
+        redis_network:
+            ipv4_address: 172.38.0.21
+
+    sentinel-2:
+      image: redis
+      command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+      volumes:
+        - ./sentinel-2/conf:/etc/redis
+        - ./sentinel-2/data:/data
+      ports:
+        - 26380:26379
+      networks:
+        redis_network:
+            ipv4_address: 172.38.0.22
+
+    sentinel-3:
+      image: redis
+      command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+      volumes:
+        - ./sentinel-3/conf:/etc/redis
+        - ./sentinel-3/data:/data
+      ports:
+        - 26381:26379
+      networks:
+        redis_network:
+            ipv4_address: 172.38.0.23
+```
+
+Make sure to create directories and configuration files for each Sentinel as you did for the Redis nodes.
+
+---
 
 ## Stopping and Removing the Cluster
 

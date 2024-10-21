@@ -11,6 +11,7 @@ services:
         networks:
             redis_network:
                 ipv4_address: 172.38.0.11
+
     redis-2:
       image: redis
       command: ["redis-server", "/etc/redis/redis.conf"]
@@ -23,6 +24,7 @@ services:
       networks:
         redis_network:
             ipv4_address: 172.38.0.12
+
     redis-3:
       image: redis
       command: ["redis-server", "/etc/redis/redis.conf"]
@@ -35,6 +37,7 @@ services:
       networks:
         redis_network:
             ipv4_address: 172.38.0.13
+
     redis-4:
       image: redis
       command: ["redis-server", "/etc/redis/redis.conf"]
@@ -47,6 +50,7 @@ services:
       networks:
           redis_network:
               ipv4_address: 172.38.0.14
+
     redis-5:
       image: redis
       command: ["redis-server", "/etc/redis/redis.conf"]
@@ -59,6 +63,7 @@ services:
       networks:
         redis_network:
             ipv4_address: 172.38.0.15
+
     redis-6:
       image: redis
       command: ["redis-server", "/etc/redis/redis.conf"]
@@ -71,6 +76,7 @@ services:
       networks:
         redis_network:
             ipv4_address: 172.38.0.16
+
     redisinsight:
       image: redis/redisinsight:latest
       volumes:
@@ -79,6 +85,43 @@ services:
         - 5540:5540
       networks:
         - redis_network
+
+    sentinel-1:
+      image: redis
+      command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+      volumes:
+        - ./sentinel-1/conf:/etc/redis
+        - ./sentinel-1/data:/data
+      ports:
+        - 26379:26379
+      networks:
+        redis_network:
+            ipv4_address: 172.38.0.21
+
+    sentinel-2:
+      image: redis
+      command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+      volumes:
+        - ./sentinel-2/conf:/etc/redis
+        - ./sentinel-2/data:/data
+      ports:
+        - 26380:26379
+      networks:
+        redis_network:
+            ipv4_address: 172.38.0.22
+
+    sentinel-3:
+      image: redis
+      command: ["redis-sentinel", "/etc/redis/sentinel.conf"]
+      volumes:
+        - ./sentinel-3/conf:/etc/redis
+        - ./sentinel-3/data:/data
+      ports:
+        - 26381:26379
+      networks:
+        redis_network:
+            ipv4_address: 172.38.0.23
+
 networks:
     redis_network:
         driver: bridge
