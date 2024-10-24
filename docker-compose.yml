@@ -1,0 +1,178 @@
+services:
+  redis-master-1:
+    image: redis:7.4.1
+    hostname: redis-master-1
+    volumes:
+      - ./data/master1:/data
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "/data/nodes-1.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0"
+      ]
+    ports:
+      - 16379:6379
+    networks:
+      redis_network:
+        ipv4_address: 172.39.0.11
+
+  redis-master-2:
+    image: redis:7.4.1
+    hostname: redis-master-2
+    volumes:
+      - ./data/master2:/data
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "/data/nodes-2.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0"
+      ]
+    ports:
+      - 16380:6379
+    networks:
+      redis_network:
+        ipv4_address: 172.39.0.12
+
+  redis-master-3:
+    image: redis:7.4.1
+    hostname: redis-master-3
+    volumes:
+      - ./data/master3:/data
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "/data/nodes-3.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0"
+      ]
+    ports:
+      - 16381:6379
+    networks:
+      redis_network:
+        ipv4_address: 172.39.0.13
+
+  redis-slave-1:
+    image: redis:7.4.1
+    hostname: redis-slave-1
+    volumes:
+      - ./data/slave1:/data
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "/data/nodes-4.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0"
+      ]
+    ports:
+      - 16382:6379
+    networks:
+      redis_network:
+        ipv4_address: 172.39.0.14
+
+  redis-slave-2:
+    image: redis:7.4.1
+    hostname: redis-slave-2
+    volumes:
+      - ./data/slave2:/data
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "/data/nodes-5.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0"
+      ]
+    ports:
+      - 16383:6379
+    networks:
+      redis_network:
+        ipv4_address: 172.39.0.15
+
+  redis-slave-3:
+    image: redis:7.4.1
+    hostname: redis-slave-3
+    volumes:
+      - ./data/slave3:/data
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "/data/nodes-6.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0"
+      ]
+    ports:
+      - 16384:6379
+    networks:
+      redis_network:
+        ipv4_address: 172.39.0.16
+
+volumes:
+  redisinsight:
+
+networks:
+  redis_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.39.0.0/16
+          gateway: 172.39.0.1
+
+# docker exec -it redis-cluster-redis-master-1-1 redis-cli --cluster create \
+# 172.39.0.11:6379 172.39.0.12:6379 172.39.0.13:6379 \
+# 172.39.0.14:6379 172.39.0.15:6379 172.39.0.16:6379 \
+# --cluster-replicas 1
