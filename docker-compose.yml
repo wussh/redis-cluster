@@ -1,6 +1,6 @@
 services:
   redis-master-1:
-    image: redis:7.4.1
+    image: redis:7.4.2
     hostname: redis-master-1
     volumes:
       - ./data/master1:/data
@@ -27,7 +27,7 @@ services:
         ipv4_address: 172.39.0.11
 
   redis-master-2:
-    image: redis:7.4.1
+    image: redis:7.4.2
     hostname: redis-master-2
     volumes:
       - ./data/master2:/data
@@ -54,7 +54,7 @@ services:
         ipv4_address: 172.39.0.12
 
   redis-master-3:
-    image: redis:7.4.1
+    image: redis:7.4.2
     hostname: redis-master-3
     volumes:
       - ./data/master3:/data
@@ -81,7 +81,7 @@ services:
         ipv4_address: 172.39.0.13
 
   redis-slave-1:
-    image: redis:7.4.1
+    image: redis:7.4.2
     hostname: redis-slave-1
     volumes:
       - ./data/slave1:/data
@@ -108,7 +108,7 @@ services:
         ipv4_address: 172.39.0.14
 
   redis-slave-2:
-    image: redis:7.4.1
+    image: redis:7.4.2
     hostname: redis-slave-2
     volumes:
       - ./data/slave2:/data
@@ -135,7 +135,7 @@ services:
         ipv4_address: 172.39.0.15
 
   redis-slave-3:
-    image: redis:7.4.1
+    image: redis:7.4.2
     hostname: redis-slave-3
     volumes:
       - ./data/slave3:/data
